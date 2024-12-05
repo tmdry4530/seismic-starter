@@ -1,66 +1,24 @@
-## Foundry
+# Walnut Starter Contracts
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+![walnut banner](assets/walnut_banner.png)
 
-Foundry consists of:
+### Overview
+A starter repository to get you started with using `stype`. The app is centered
+around a walnut with a secret number inside. 
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+Every time you shake the walnut, this number increments. Every time you hit the 
+walnut, the shell gets closer to cracking. You can only look at the number once 
+the shell is cracked.
 
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
+### Usage
+Run the following command to run the tests:
+```bash
+$ sforge test
 ```
 
-### Test
-
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+Run the following command to deploy the contract:
+```bash
+$ sforge script script/Walnut.s.sol:WalnutScript \
+      --rpc-url <your_rpc_url> \
+      --private-key <your_private_key>
 ```

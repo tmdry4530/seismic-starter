@@ -1,12 +1,4 @@
-/*
- * SPDX-License-Identifier: MIT License
- *
- * You have a walnut with a secret number inside. Every time you shake the
- * walnut, this number increments. Every time you hit the walnut, the shell
- * gets closer to cracking. You can only look at the number once the shell is
- * cracked.
- *
- */
+// SPDX-License-Identifier: MIT License
 pragma solidity ^0.8.13;
 
 contract Walnut {
