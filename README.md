@@ -22,3 +22,10 @@ $ sforge script script/Walnut.s.sol:WalnutScript \
       --rpc-url <your_rpc_url> \
       --private-key <your_private_key>
 ```
+
+### Coming up
+We'll extend this starter repository to include a mobile interface for the
+walnut that runs on a local `sanvil` instance. The ETA for this is Dec 16, 2024.
+
+Then we'll release a version that deploys to the seismic devnet. The ETA for
+this is Dec 23, 2024.
