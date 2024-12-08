@@ -16,13 +16,6 @@ Run the following command to run the tests:
 $ sforge test
 ```
 
-Run the following command to deploy the contract:
-```bash
-$ sforge script script/Walnut.s.sol:WalnutScript \
-      --rpc-url <your_rpc_url> \
-      --private-key <your_private_key>
-```
-
 ### Coming up
 We'll extend this starter repository to include a mobile interface for the
 walnut that runs on a local `sanvil` instance. The ETA for this is Dec 16, 2024.
