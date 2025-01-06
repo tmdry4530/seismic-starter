@@ -9,6 +9,9 @@ contract WalnutTest is Test {
 
     function setUp() public {
         walnut = new Walnut(2, 0);
+
+        saddress a = saddress(0x123);
+        console.log(address(a));
     }
 
     function test_Cracked() public {

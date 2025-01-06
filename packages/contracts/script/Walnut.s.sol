@@ -7,10 +7,10 @@ import {Walnut} from "../src/Walnut.sol";
 contract WalnutScript is Script {
     Walnut public walnut;
 
-    function setUp() public {}
-
     function run() public {
-        vm.startBroadcast();
+        uint256 deployerPrivateKey = vm.envUint("DEPLOYER_PRIVKEY");
+
+        vm.startBroadcast(deployerPrivateKey);
         walnut = new Walnut(3, 0);
         vm.stopBroadcast();
     }
