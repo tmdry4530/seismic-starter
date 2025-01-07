@@ -8,7 +8,7 @@ contract WalnutTest is Test {
     Walnut public walnut;
 
     function setUp() public {
-        walnut = new Walnut(2, 0);
+        walnut = new Walnut(2, suint256(0));
 
         saddress a = saddress(0x123);
         console.log(address(a));

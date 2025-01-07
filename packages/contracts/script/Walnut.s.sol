@@ -11,7 +11,7 @@ contract WalnutScript is Script {
         uint256 deployerPrivateKey = vm.envUint("DEPLOYER_PRIVKEY");
 
         vm.startBroadcast(deployerPrivateKey);
-        walnut = new Walnut(3, 0);
+        walnut = new Walnut(3, suint256(0));
         vm.stopBroadcast();
     }
 }
