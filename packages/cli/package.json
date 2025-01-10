@@ -6,7 +6,7 @@
     },
     "dependencies": {
         "dotenv": "^16.4.7",
-        "seismic-viem": "^1.0.0",
+        "seismic-viem": "^1.0.1",
         "viem": "^2.22.3"
     },
     "devDependencies": {
