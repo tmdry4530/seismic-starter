@@ -5,8 +5,10 @@
         "dev": "bun run src/index.ts"
     },
     "dependencies": {
+        "crypto-browserify": "^3.12.1",
         "dotenv": "^16.4.7",
-        "seismic-viem": "^1.0.1",
+        "seismic-client": "git+git@github.com:SeismicSystems/seismic-client.git#3b2f224",
+        "seismic-viem": "https://github.com/SeismicSystems/seismic-client.git#fix:packages/seismic-viem",
         "viem": "^2.22.3"
     },
     "devDependencies": {

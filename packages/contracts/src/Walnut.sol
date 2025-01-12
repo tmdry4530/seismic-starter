@@ -40,6 +40,10 @@ contract Walnut {
         return uint256(number);
     }
 
+    function set_number(suint _number) public {
+        number = _number;
+    }
+
     modifier requireCracked() {
         if (shell > 0) revert("SHELL_INTACT");
         _;
