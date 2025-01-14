@@ -21,7 +21,7 @@ async function getShieldedContractWithCheck(
         address: address,
     });
     if (!code) {
-        throw new Error("- Please deploy contract before running this script.");
+        throw new Error("Please deploy contract before running this script.");
     }
 
     return contract;

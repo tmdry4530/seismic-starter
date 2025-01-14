@@ -3,12 +3,12 @@ import { join } from "path";
 dotenv.config();
 
 import { createShieldedWalletClient, getShieldedContract, seismicDevnet } from "seismic-viem";
+import { anvil } from "viem/chains";
 
 import { App } from "./app";
 import { CONTRACT_NAME, CONTRACT_DIR } from "../lib/constants";
 import { readContractAddress, readContractABI } from "../lib/utils";
 import { http } from "viem";
-import { anvil } from "viem/chains";
 
 async function main() {
     if (!process.env.CHAIN_ID || !process.env.RPC_URL || !process.env.PRIVKEY) {
@@ -30,22 +30,25 @@ async function main() {
         `${CONTRACT_NAME}.json`,
     );
 
-    // const walletClient = await createShieldedWalletClient({
-    //     chain: anvil,
-    //     transport: http(process.env.RPC_URL),
-    //     privateKey: process.env.PRIVKEY as `0x${string}`,
-    // });
-    // const contract = getShieldedContract({
-    //     abi: readContractABI(abiFile),
-    //     address: readContractAddress(broadcastFile),
-    //     client: walletClient,
-    // });
-    // await contract.write.reset();
-    // console.log("contract", contract);
+    const walletClient = await createShieldedWalletClient({
+        chain: anvil,
+        transport: http(process.env.RPC_URL),
+        privateKey: process.env.PRIVKEY as `0x${string}`,
+    });
+    const contract = getShieldedContract({
+        abi: readContractABI(abiFile),
+        address: readContractAddress(broadcastFile),
+        client: walletClient,
+    });
+
+    await contract.write.reset();
+
+    // const anvilId = anvil.id.toString();
+    // const chain = process.env.CHAIN_ID === anvilId ? anvil : seismicDevnet;
 
     // const app = new App({
     //     wallet: {
-    //         chain: seismicDevnet,
+    //         chain,
     //         rpcUrl: process.env.RPC_URL,
     //         privateKey: process.env.PRIVKEY,
     //     },
