@@ -2,7 +2,7 @@ import { join } from "path";
 
 const CHAIN_ID = "31337";
 const CONTRACT_NAME = "Walnut";
-const CONTRACT_DIR = join(__dirname, "../../contracts");
+const CONTRACT_DIR = join(__dirname, "../../../contracts");
 
 const BROADCAST_FILE = join(
     CONTRACT_DIR,

@@ -1,6 +1,31 @@
 import fs from "fs";
 
-import { Abi } from "viem";
+import {
+    getShieldedContract,
+    type ShieldedWalletClient,
+} from "seismic-viem";
+import { Abi, Address } from "viem";
+
+async function getShieldedContractWithCheck(
+    walletClient: ShieldedWalletClient,
+    abi: Abi,
+    address: Address,
+) {
+    const contract = getShieldedContract({
+        abi: abi,
+        address: address,
+        client: walletClient,
+    });
+
+    const code = await walletClient.getCode({
+        address: address,
+    });
+    if (!code) {
+        throw new Error("- Please deploy contract before running this script.");
+    }
+
+    return contract;
+}
 
 function readContractAddress(broadcastFile: string): `0x${string}` {
     const broadcast = JSON.parse(fs.readFileSync(broadcastFile, "utf8"));
@@ -18,8 +43,4 @@ function readContractABI(abiFile: string): Abi {
     return abi.abi;
 }
 
-function sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export { readContractAddress, readContractABI, sleep };
+export { getShieldedContractWithCheck, readContractAddress, readContractABI };
