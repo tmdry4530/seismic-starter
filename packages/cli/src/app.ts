@@ -1,9 +1,10 @@
 import {
     createShieldedWalletClient,
+    getShieldedContract,
     type ShieldedContract,
     type ShieldedWalletClient,
 } from "seismic-viem";
-import { Chain, http } from "viem";
+import { Abi, Address, Chain, http } from "viem";
 
 import {
     getShieldedContractWithCheck,
@@ -18,8 +19,8 @@ interface AppConfig {
         privateKey: string;
     };
     contract: {
-        abiFile: string;
-        broadcastFile: string;
+        abi: Abi;
+        address: Address;
     };
 }
 
@@ -42,13 +43,26 @@ export class App {
 
         this.contract = await getShieldedContractWithCheck(
             this.walletClient,
-            readContractABI(this.config.contract.abiFile),
-            readContractAddress(this.config.contract.broadcastFile),
+            this.config.contract.abi,
+            this.config.contract.address,
         );
+        console.log("contract", this.contract);
+
+
+        const walletClient1 = await createShieldedWalletClient({
+            chain: this.config.wallet.chain,
+            transport: http(this.config.wallet.rpcUrl),
+            privateKey: this.config.wallet.privateKey as `0x${string}`,
+        });
+        const contract1 = getShieldedContract({
+            abi: this.config.contract.abi,
+            address: this.config.contract.address,
+            client: walletClient1,
+        });
+        console.log("contract1", contract1);
     }
 
     async reset() {
-        console.log("- Writing reset()");
         await this.walletClient.waitForTransactionReceipt({
             hash: await this.contract.write.reset(),
         });

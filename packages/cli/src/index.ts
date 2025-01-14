@@ -1,37 +1,68 @@
 import dotenv from "dotenv";
+import { join } from "path";
 dotenv.config();
 
-import { seismicDevnet } from "seismic-viem";
+import { createShieldedWalletClient, getShieldedContract, seismicDevnet } from "seismic-viem";
 
 import { App } from "./app";
-import { BROADCAST_FILE, ABI_FILE } from "../lib/constants";
+import { CONTRACT_NAME, CONTRACT_DIR } from "../lib/constants";
+import { readContractAddress, readContractABI } from "../lib/utils";
+import { http } from "viem";
+import { anvil } from "viem/chains";
 
 async function main() {
-    if (!process.env.RPC_URL || !process.env.ALICE_PRIVKEY) {
+    if (!process.env.CHAIN_ID || !process.env.RPC_URL || !process.env.PRIVKEY) {
         console.error("Please set your environment variables.");
         process.exit(1);
     }
 
-    const app = new App({
-        wallet: {
-            chain: seismicDevnet,
-            rpcUrl: process.env.RPC_URL,
-            privateKey: process.env.ALICE_PRIVKEY,
-        },
-        contract: {
-            abiFile: ABI_FILE,
-            broadcastFile: BROADCAST_FILE,
-        },
-    });
-    await app.init();
+    const broadcastFile = join(
+        CONTRACT_DIR,
+        "broadcast",
+        `${CONTRACT_NAME}.s.sol`,
+        process.env.CHAIN_ID,
+        "run-latest.json",
+    );
+    const abiFile = join(
+        CONTRACT_DIR,
+        "out",
+        `${CONTRACT_NAME}.sol`,
+        `${CONTRACT_NAME}.json`,
+    );
 
-    await app.reset();
-    await app.shake();
-    await app.shake();
-    await app.hit();
-    await app.shake();
-    await app.hit();
-    await app.look();
+    // const walletClient = await createShieldedWalletClient({
+    //     chain: anvil,
+    //     transport: http(process.env.RPC_URL),
+    //     privateKey: process.env.PRIVKEY as `0x${string}`,
+    // });
+    // const contract = getShieldedContract({
+    //     abi: readContractABI(abiFile),
+    //     address: readContractAddress(broadcastFile),
+    //     client: walletClient,
+    // });
+    // await contract.write.reset();
+    // console.log("contract", contract);
+
+    // const app = new App({
+    //     wallet: {
+    //         chain: seismicDevnet,
+    //         rpcUrl: process.env.RPC_URL,
+    //         privateKey: process.env.PRIVKEY,
+    //     },
+    //     contract: {
+    //         abi: readContractABI(abiFile),
+    //         address: readContractAddress(broadcastFile),
+    //     },
+    // });
+    // await app.init();
+
+    // await app.reset();
+    // await app.shake();
+    // await app.shake();
+    // await app.hit();
+    // await app.shake();
+    // await app.hit();
+    // await app.look();
 }
 
 main();
