@@ -78,12 +78,12 @@ export class App {
     })
   }
 
-  async shake(playerName: string) {
+  async shake(playerName: string, numShakes: number) {
     console.log(`- Player ${playerName} writing shake()`)
     const contract = this.getPlayerContract(playerName)
     const walletClient = this.getWalletClient(playerName)
     await walletClient.waitForTransactionReceipt({
-      hash: await contract.write.shake(),
+      hash: await contract.write.shake([numShakes]),
     })
   }
 
