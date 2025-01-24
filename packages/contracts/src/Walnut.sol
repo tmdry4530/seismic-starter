@@ -26,6 +26,10 @@ contract Walnut {
         round = 1;
     }
 
+    function getShell() public view returns (uint256) {
+        return shell;
+    }
+
     function hit() public {
         require(shell > 0, "SHELL_ALREADY_CRACKED");
         shell--;

@@ -31,7 +31,12 @@ contract WalnutTest is Test {
         uint256 shakes = 0;
         for (uint256 i = 0; i < 50; i++) {
             if (i % 3 == 0) {
-                walnut.hit();
+                if (walnut.getShell() > 0) {
+                    walnut.hit();
+                } else {
+                    walnut.shake();
+                    shakes++;
+                }
             } else {
                 walnut.shake();
                 shakes++;
