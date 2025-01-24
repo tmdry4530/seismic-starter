@@ -71,13 +71,13 @@ async function main() {
   await app.look('Bob')
 
   // Alice tries to look in round 2
-//   try {
-//     await app.look('Alice')
-//   } catch (error) {
-//     const errorMessage =
-//       error instanceof Error ? error.message : 'Unknown error'
-//     console.error('Alice could not call look() in round 2:', errorMessage)
-//   }
+  try {
+    await app.look('Alice')
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error'
+    console.error('Alice could not call look() in round 2:', errorMessage)
+  }
 }
 
 main()
