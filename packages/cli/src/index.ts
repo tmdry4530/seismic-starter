@@ -53,14 +53,16 @@ async function main() {
 
   // Simulating multiplayer interactions
   console.log('=== Round 1 ===')
+  await app.reset('Alice')
   await app.shake('Alice')
   await app.hit('Alice')
   await app.shake('Alice')
   await app.hit('Alice')
   await app.look('Alice')
-  await app.reset('Alice')
+ 
 
   console.log('=== Round 2 ===')
+  await app.reset('Bob')
   await app.hit('Bob')
   await app.shake('Bob')
   await app.hit('Bob')
@@ -69,13 +71,13 @@ async function main() {
   await app.look('Bob')
 
   // Alice tries to look in round 2
-  try {
-    await app.look('Alice')
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error'
-    console.error('Alice could not call look() in round 2:', errorMessage)
-  }
+//   try {
+//     await app.look('Alice')
+//   } catch (error) {
+//     const errorMessage =
+//       error instanceof Error ? error.message : 'Unknown error'
+//     console.error('Alice could not call look() in round 2:', errorMessage)
+//   }
 }
 
 main()
