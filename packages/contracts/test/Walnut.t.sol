@@ -65,5 +65,38 @@ function test_RevertWhen_NonContributorTriesToLook() public {
         
         assertEq(walnut.look(), 3);
     }
+
+    function test_ContributorInRound2() public {
+    // Address that will become a contributor in round 2
+    address contributorRound2 = address(0xabcd);
+
+    // Round 1: Walnut broken by address(this)
+    walnut.hit(); // Hit 1 by address(this)
+    walnut.hit(); // Hit 2 by address(this)
+    assertEq(walnut.look(), 0); // Verify the walnut is cracked and look() works for address(this)
+
+    // Reset the walnut, moving to round 2
+    walnut.reset();
+
+    // Round 2: Walnut broken by contributorRound2
+    vm.prank(contributorRound2);
+    walnut.hit(); // Hit 1 by contributorRound2
+
+    vm.prank(contributorRound2);
+    walnut.hit(); // Hit 2 by contributorRound2
+
+    vm.prank(contributorRound2);
+    walnut.shake(); // Shake once by contributorRound2
+
+    // Verify contributorRound2 can call look() in round 2
+    vm.prank(contributorRound2);
+    assertEq(walnut.look(), 1); // Expect the number to be 1 due to 1 shake
+
+    // Verify address(this) cannot call look() in round 2
+    vm.expectRevert("NOT_A_CONTRIBUTOR");
+    walnut.look();
+}
+
+
 }
 
