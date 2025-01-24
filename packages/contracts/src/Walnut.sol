@@ -37,11 +37,10 @@ contract Walnut {
         emit Hit(round, msg.sender, shell);
     }
 
-    function shake() public {
-        number++;
+    function shake(suint256 _numShakes) public {
+        number+= _numShakes;
         emit Shake(round, msg.sender);
     }
-
 
     function reset() public {
         shell = startShell;

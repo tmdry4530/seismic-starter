@@ -15,7 +15,7 @@ contract WalnutTest is Test {
     }
 
     function test_Cracked() public {
-        walnut.shake();
+        walnut.shake(suint256(1));
         walnut.hit();
         walnut.hit();
         assertEq(walnut.look(), 1);
@@ -23,7 +23,7 @@ contract WalnutTest is Test {
 
     function testFail_EarlyLook() public {
         walnut.hit();
-        walnut.shake();
+        walnut.shake(suint256(1));
         walnut.look();
     }
 
@@ -34,69 +34,68 @@ contract WalnutTest is Test {
                 if (walnut.getShell() > 0) {
                     walnut.hit();
                 } else {
-                    walnut.shake();
-                    shakes++;
+                    // Shake a random number of times between 1-5
+                    uint256 numShakes = (i % 5) + 1;
+                    walnut.shake(suint256(numShakes));
+                    shakes += numShakes;
                 }
             } else {
-                walnut.shake();
-                shakes++;
+                // Shake a random number of times between 1-3
+                uint256 numShakes = (i % 3) + 1;
+                walnut.shake(suint256(numShakes));
+                shakes += numShakes;
             }
         }
         assertEq(walnut.look(), shakes);
     }
 
-function test_RevertWhen_NonContributorTriesToLook() public {
+    function test_RevertWhen_NonContributorTriesToLook() public {
         // Address that will attempt to call 'look' without contributing
         address nonContributor = address(0xabcd);
 
         // Ensure the shell is cracked
         walnut.hit();
-        vm.prank(address(nonContributor));
-        for (uint256 i = 0; i < 3; i++) {
-            walnut.shake();
-        }
+        walnut.shake(suint256(3));
         walnut.hit();
 
-        // Expect the 'look' function to revert with "NOT_A_CONTRIBUTOR" error
+            // Expect the 'look' function to revert with "NOT_A_CONTRIBUTOR" error
         vm.prank(address(nonContributor));
         console.log(address(this));
         vm.expectRevert("NOT_A_CONTRIBUTOR");
         walnut.look();
-        
-        assertEq(walnut.look(), 3);
+        assertEq(walnut.look(), 3);    
     }
 
     function test_ContributorInRound2() public {
-    // Address that will become a contributor in round 2
-    address contributorRound2 = address(0xabcd);
+        // Address that will become a contributor in round 2
+        address contributorRound2 = address(0xabcd);
 
-    // Round 1: Walnut broken by address(this)
-    walnut.hit(); // Hit 1 by address(this)
-    walnut.hit(); // Hit 2 by address(this)
-    assertEq(walnut.look(), 0); // Verify the walnut is cracked and look() works for address(this)
+        // Round 1: Walnut broken by address(this)
+        walnut.hit(); // Hit 1 by address(this)
+        walnut.hit(); // Hit 2 by address(this)
+        assertEq(walnut.look(), 0); // Verify the walnut is cracked and look() works for address(this)
 
-    // Reset the walnut, moving to round 2
-    walnut.reset();
+        // Reset the walnut, moving to round 2
+        walnut.reset();
 
-    // Round 2: Walnut broken by contributorRound2
-    vm.prank(contributorRound2);
-    walnut.hit(); // Hit 1 by contributorRound2
+        // Round 2: Walnut broken by contributorRound2
+        vm.prank(contributorRound2);
+        walnut.hit(); // Hit 1 by contributorRound2
 
-    vm.prank(contributorRound2);
-    walnut.hit(); // Hit 2 by contributorRound2
+        vm.prank(contributorRound2);
+        walnut.hit(); // Hit 2 by contributorRound2
 
-    vm.prank(contributorRound2);
-    walnut.shake(); // Shake once by contributorRound2
+        vm.prank(contributorRound2);
+        walnut.shake(suint256(5)); // Shake 5 times by contributorRound2
 
-    // Verify contributorRound2 can call look() in round 2
-    vm.prank(contributorRound2);
-    assertEq(walnut.look(), 1); // Expect the number to be 1 due to 1 shake
+        // Verify contributorRound2 can call look() in round 2
+        vm.prank(contributorRound2);
+        assertEq(walnut.look(), 5); // Expect the number to be 5 due to 5 shakes
 
-    // Verify address(this) cannot call look() in round 2
-    vm.expectRevert("NOT_A_CONTRIBUTOR");
-    walnut.look();
-}
-
+        // Verify address(this) cannot call look() in round 2
+        vm.expectRevert("NOT_A_CONTRIBUTOR");
+        walnut.look();
+    }
 
 }
 
