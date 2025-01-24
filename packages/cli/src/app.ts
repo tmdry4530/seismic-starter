@@ -61,7 +61,7 @@ export class App {
         return client;
     }
 
-    public getPlayerContract(playerName: string): ShieldedContract {
+    private getPlayerContract(playerName: string): ShieldedContract {
         const contract = this.playerContracts.get(playerName);
         if (!contract) {
             throw new Error(`Shielded contract for player ${playerName} not found`);
