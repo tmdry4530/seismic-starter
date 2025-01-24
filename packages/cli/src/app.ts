@@ -50,7 +50,7 @@ export class App {
       )
       this.playerContracts.set(player.name, contract)
     }
-    console.log('playerContracts', this.playerContracts)
+    // console.log('playerContracts', this.playerContracts)
   }
 
   private getWalletClient(playerName: string): ShieldedWalletClient {
@@ -99,7 +99,7 @@ export class App {
   async look(playerName: string) {
     console.log(`- Player ${playerName} reading look()`)
     const contract = this.getPlayerContract(playerName)
-    console.log('contract', contract)
+    // console.log('contract', contract)
     const result = await contract.read.look()
     console.log(`- Player ${playerName} sees number:`, result)
   }
