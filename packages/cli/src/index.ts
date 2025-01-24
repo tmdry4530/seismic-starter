@@ -1,18 +1,15 @@
 import dotenv from "dotenv";
 import { join } from "path";
-
-import { createShieldedWalletClient, getShieldedContract, seismicDevnet } from "seismic-viem";
 import { anvil } from "viem/chains";
-import { privateKeyToAccount } from "viem/accounts";
 import { App } from "./app";
 import { CONTRACT_NAME, CONTRACT_DIR } from "../lib/constants";
 import { readContractAddress, readContractABI } from "../lib/utils";
-import { http } from "viem";
+import { seismicDevnet } from "seismic-viem";
 
 dotenv.config();
 
 async function main() {
-    if (!process.env.CHAIN_ID || !process.env.RPC_URL || !process.env.PRIVKEY) {
+    if (!process.env.CHAIN_ID || !process.env.RPC_URL) {
         console.error("Please set your environment variables.");
         process.exit(1);
     }
@@ -31,42 +28,53 @@ async function main() {
         `${CONTRACT_NAME}.json`,
     );
 
-    // const walletClient = await createShieldedWalletClient({
-    //     chain: anvil,
-    //     transport: http(process.env.RPC_URL),
-    //     account: privateKeyToAccount(process.env.PRIVKEY as `0x${string}`),
-    // });
-    // const contract = getShieldedContract({
-    //     abi: readContractABI(abiFile),
-    //     address: readContractAddress(broadcastFile),
-    //     client: walletClient,
-    // });
+    const chain = process.env.CHAIN_ID === anvil.id.toString() ? anvil : seismicDevnet;
 
-    // await contract.write.reset();
-
-    const anvilId = anvil.id.toString();
-    const chain = process.env.CHAIN_ID === anvilId ? anvil : seismicDevnet;
+    const players = [
+        { name: "Alice", privateKey: process.env.ALICE_PRIVKEY! },
+        { name: "Bob", privateKey: process.env.BOB_PRIVKEY! },
+    ];
 
     const app = new App({
+        players,
         wallet: {
             chain,
-            rpcUrl: process.env.RPC_URL,
-            privateKey: process.env.PRIVKEY,
+            rpcUrl: process.env.RPC_URL!,
         },
         contract: {
             abi: readContractABI(abiFile),
             address: readContractAddress(broadcastFile),
         },
     });
+
     await app.init();
 
-    await app.reset();
-    await app.shake();
-    await app.shake();
-    await app.hit();
-    await app.shake();
-    await app.hit();
-    await app.look();
+    
+    // Simulating multiplayer interactions
+    console.log("=== Round 1 ===");
+    await app.shake("Alice");
+    await app.hit("Alice");
+    await app.shake("Alice");
+    await app.hit("Alice");
+    await app.look("Alice");
+    await app.reset("Alice");
+
+    console.log("=== Round 2 ===");
+    await app.reset("Bob");
+    await app.hit("Bob");
+    await app.shake("Bob");
+    await app.hit("Bob");
+
+    // Bob looks at the number in round 2
+    await app.look("Bob");
+
+    // Alice tries to look in round 2
+    try {
+        await app.look("Alice");
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        console.error("Alice could not call look() in round 2:", errorMessage);
+    }
 }
 
 main();
