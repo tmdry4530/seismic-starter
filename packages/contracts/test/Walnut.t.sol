@@ -31,7 +31,7 @@ contract WalnutTest is Test {
         uint256 shakes = 0;
         for (uint256 i = 0; i < 50; i++) {
             if (i % 3 == 0) {
-                if (walnut.getShell() > 0) {
+                if (walnut.getShellStrength() > 0) {
                     walnut.hit();
                 } else {
                     // Shake a random number of times between 1-5
