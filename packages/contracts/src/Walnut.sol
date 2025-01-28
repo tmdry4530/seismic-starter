@@ -33,21 +33,20 @@ contract Walnut {
     }
 
     // Hit the Walnut to reduce its shell strength.
-    function hit() public {
-        require(shellStrength > 0, "SHELL_ALREADY_CRACKED"); // Ensure the shell is not already cracked.
+    function hit() public requireIntact {
         shellStrength--; // Decrease the shell strength.
         hitsPerRound[round][msg.sender]++; // Record the player's hit for the current round.
         emit Hit(round, msg.sender, shellStrength); // Log the hit.
     }
 
     // Shake the Walnut to increase the kernel value.
-    function shake(suint256 _numShakes) public {
+    function shake(suint256 _numShakes) public requireIntact {
         kernel += _numShakes; // Increment the kernel value.
         emit Shake(round, msg.sender); // Log the shake.
     }
 
     // Reset the Walnut for a new round.
-    function reset() public {
+    function reset() public requireCracked {
         shellStrength = initialShellStrength; // Reset the shell strength.
         kernel = initialKernel; // Reset the kernel value.
         round++; // Move to the next round.
@@ -66,7 +65,13 @@ contract Walnut {
 
     // Modifier to ensure the shell is fully cracked.
     modifier requireCracked() {
-        if (shellStrength > 0) revert("SHELL_INTACT");
+        require(shellStrength == 0, "SHELL_INTACT");
+        _;
+    }
+
+    // Modifier to ensure the shell is not cracked.
+    modifier requireIntact() {
+        require(shellStrength > 0, "SHELL_ALREADY_CRACKED");
         _;
     }
 

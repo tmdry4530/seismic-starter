@@ -27,23 +27,25 @@ contract WalnutTest is Test {
         walnut.look();
     }
 
+    function testFail_EarlyReset() public {
+        walnut.hit();
+        walnut.shake(suint256(1));
+        walnut.reset();
+    }
+
     function test_ManyActions() public {
         uint256 shakes = 0;
         for (uint256 i = 0; i < 50; i++) {
-            if (i % 3 == 0) {
-                if (walnut.getShellStrength() > 0) {
+            // Only shake if the walnut is still intact
+            if (walnut.getShellStrength() > 0) {
+                if (i % 25 == 0) {
                     walnut.hit();
                 } else {
-                    // Shake a random number of times between 1-5
-                    uint256 numShakes = (i % 5) + 1;
+                    // Shake a random number of times between 1-3
+                    uint256 numShakes = (i % 3) + 1;
                     walnut.shake(suint256(numShakes));
                     shakes += numShakes;
                 }
-            } else {
-                // Shake a random number of times between 1-3
-                uint256 numShakes = (i % 3) + 1;
-                walnut.shake(suint256(numShakes));
-                shakes += numShakes;
             }
         }
         assertEq(walnut.look(), shakes);
@@ -83,10 +85,10 @@ contract WalnutTest is Test {
         walnut.hit(); // Hit 1 by contributorRound2
 
         vm.prank(contributorRound2);
-        walnut.hit(); // Hit 2 by contributorRound2
+        walnut.shake(suint256(5)); // Shake 5 times by contributorRound2
 
         vm.prank(contributorRound2);
-        walnut.shake(suint256(5)); // Shake 5 times by contributorRound2
+        walnut.hit(); // Hit 2 by contributorRound2
 
         // Verify contributorRound2 can call look() in round 2
         vm.prank(contributorRound2);
