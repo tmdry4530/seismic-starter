@@ -21,16 +21,34 @@ contract WalnutTest is Test {
         assertEq(walnut.look(), 1);
     }
 
-    function testFail_EarlyLook() public {
+    function test_CannotLookWhenIntact() public {
         walnut.hit();
         walnut.shake(suint256(1));
+        vm.expectRevert("SHELL_INTACT");
         walnut.look();
     }
 
-    function testFail_EarlyReset() public {
+    function test_CannotResetWhenIntact() public {
         walnut.hit();
         walnut.shake(suint256(1));
+        vm.expectRevert("SHELL_INTACT");
         walnut.reset();
+    }
+    
+    function test_CannotHitWhenCracked() public {
+        walnut.hit();
+        walnut.hit();
+        vm.expectRevert("SHELL_ALREADY_CRACKED");
+        walnut.hit();
+    }
+
+    function test_CannotShakeWhenCracked() public {
+        walnut.hit();
+        walnut.shake(suint256(1));
+        walnut.shake(suint256(1));
+        walnut.hit();
+        vm.expectRevert("SHELL_ALREADY_CRACKED");
+        walnut.shake(suint256(1));
     }
 
     function test_ManyActions() public {
