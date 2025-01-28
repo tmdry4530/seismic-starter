@@ -14,31 +14,35 @@ contract WalnutTest is Test {
         console.log(address(a));
     }
 
-    function test_Cracked() public {
-        walnut.shake(suint256(1));
+    function test_Hit() public {
         walnut.hit();
         walnut.hit();
-        assertEq(walnut.look(), 1);
+        assertEq(walnut.look(), 0);
     }
 
-    function test_CannotLookWhenIntact() public {
+    function test_Shake() public {
+        walnut.shake(suint256(10));
         walnut.hit();
-        walnut.shake(suint256(1));
-        vm.expectRevert("SHELL_INTACT");
-        walnut.look();
+        walnut.hit();
+        assertEq(walnut.look(), 10);
     }
 
-    function test_CannotResetWhenIntact() public {
+    function test_Reset() public {
         walnut.hit();
-        walnut.shake(suint256(1));
-        vm.expectRevert("SHELL_INTACT");
+        walnut.shake(suint256(2));
+        walnut.hit();
         walnut.reset();
+        assertEq(walnut.getShellStrength(), 2); // Shell strength should be reset to 2
+        walnut.hit();
+        walnut.shake(suint256(5));
+        walnut.hit();
+        assertEq(walnut.look(), 5); // Look should return 5 since the shell was reset
     }
-    
+
     function test_CannotHitWhenCracked() public {
         walnut.hit();
         walnut.hit();
-        vm.expectRevert("SHELL_ALREADY_CRACKED");
+        vm.expectRevert("SHELL_ALREADY_CRACKED"); // Expect a revert when hitting a cracked shell
         walnut.hit();
     }
 
@@ -47,10 +51,24 @@ contract WalnutTest is Test {
         walnut.shake(suint256(1));
         walnut.shake(suint256(1));
         walnut.hit();
-        vm.expectRevert("SHELL_ALREADY_CRACKED");
+        vm.expectRevert("SHELL_ALREADY_CRACKED"); // Expect a revert when shaking a cracked shell
         walnut.shake(suint256(1));
     }
 
+    function test_CannotLookWhenIntact() public {
+        walnut.hit();
+        walnut.shake(suint256(1));
+        vm.expectRevert("SHELL_INTACT"); // Expect a revert when looking at an intact shell
+        walnut.look();
+    }
+
+    function test_CannotResetWhenIntact() public {
+        walnut.hit();
+        walnut.shake(suint256(1));
+        vm.expectRevert("SHELL_INTACT"); // Expect a revert when resetting an intact shell
+        walnut.reset();
+    }
+    
     function test_ManyActions() public {
         uint256 shakes = 0;
         for (uint256 i = 0; i < 50; i++) {

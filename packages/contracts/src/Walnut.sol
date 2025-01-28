@@ -12,10 +12,14 @@ contract Walnut {
     // Tracks the number of hits per player per round.
     mapping(uint256 => mapping(address => uint256)) hitsPerRound;
 
-    // Events to log key actions.
-    event Hit(uint256 indexed round, address indexed hitter, uint256 remaining); // Logged when a hit occurs.
-    event Shake(uint256 indexed round, address indexed shaker); // Logged when the Walnut is shaken.
-    event Reset(uint256 indexed newRound, uint256 remaining); // Logged when the Walnut is reset.
+    // Events to log hits, shakes, and resets.
+
+    // Event to log hits.
+    event Hit(uint256 indexed round, address indexed hitter, uint256 remaining);
+    // Event to log shakes.
+    event Shake(uint256 indexed round, address indexed shaker);
+    // Event to log resets.
+    event Reset(uint256 indexed newRound, uint256 shellStrength);
 
     constructor(uint256 _shellStrength, suint256 _kernel) {
         initialShellStrength = _shellStrength; // Set the initial shell strength.
