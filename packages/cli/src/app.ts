@@ -73,27 +73,21 @@ export class App {
     console.log(`- Player ${playerName} writing reset()`)
     const contract = this.getPlayerContract(playerName)
     const walletClient = this.getWalletClient(playerName)
-    await walletClient.waitForTransactionReceipt({
-      hash: await contract.write.reset(),
-    })
+    await contract.write.reset([], { gas: 100000n })
   }
 
   async shake(playerName: string, numShakes: number) {
     console.log(`- Player ${playerName} writing shake()`)
     const contract = this.getPlayerContract(playerName)
     const walletClient = this.getWalletClient(playerName)
-    await walletClient.waitForTransactionReceipt({
-      hash: await contract.write.shake([numShakes]),
-    })
+    await contract.write.shake([numShakes], { gas: 50000n })
   }
 
   async hit(playerName: string) {
     console.log(`- Player ${playerName} writing hit()`)
     const contract = this.getPlayerContract(playerName)
     const walletClient = this.getWalletClient(playerName)
-    await walletClient.waitForTransactionReceipt({
-      hash: await contract.write.hit(),
-    })
+    await contract.write.hit([], { gas: 100000n })
   }
 
   async look(playerName: string) {
