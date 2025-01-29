@@ -53,20 +53,25 @@ async function main() {
 
   // Simulating multiplayer interactions
   console.log('=== Round 1 ===')
-  await app.reset('Alice')
+  await app.reset('Alice') // this should fail because the shell is intact
   await app.shake('Alice', 2)
+  await app.reset('Alice')
   await app.hit('Alice')
   await app.shake('Alice', 4)
   await app.hit('Alice')
+  await app.shake('Alice', 1)
+  await app.hit('Alice')
   await app.look('Alice')
+  // await app.reset('Alice') // thi should pass
  
 
   console.log('=== Round 2 ===')
-  await app.reset('Bob')
+  await app.reset('Bob') // this should pass because the shell is cracked
+  await app.hit('Bob') 
+  await app.shake('Bob', 1)
   await app.hit('Bob')
   await app.shake('Bob', 1)
   await app.hit('Bob')
-
   // Bob looks at the number in round 2
   await app.look('Bob')
 

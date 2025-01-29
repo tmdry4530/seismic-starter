@@ -15,11 +15,11 @@ contract Walnut {
     // Events to log hits, shakes, and resets.
 
     // Event to log hits.
-    event Hit(uint256 indexed round, address indexed hitter, uint256 remaining);
+    event Hit(uint256 indexed round, address indexed hitter, uint256 remaining); // Logged when a hit occurs.
     // Event to log shakes.
-    event Shake(uint256 indexed round, address indexed shaker);
+    event Shake(uint256 indexed round, address indexed shaker); // Logged when the Walnut is shaken.
     // Event to log resets.
-    event Reset(uint256 indexed newRound, uint256 shellStrength);
+    event Reset(uint256 indexed newRound, uint256 remainingShellStrength);
 
     constructor(uint256 _shellStrength, suint256 _kernel) {
         initialShellStrength = _shellStrength; // Set the initial shell strength.
