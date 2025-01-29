@@ -63,8 +63,8 @@ async function main() {
   await app.look('Alice')
 
   console.log('=== Round 2 ===')
-  await app.reset('Bob') 
-  await app.hit('Bob') 
+  await app.reset('Bob')
+  await app.hit('Bob')
   await app.shake('Bob', 1)
   await app.hit('Bob')
   await app.shake('Bob', 2)
