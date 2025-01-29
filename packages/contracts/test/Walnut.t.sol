@@ -63,8 +63,6 @@ contract WalnutTest is Test {
     }
 
     function test_CannotResetWhenIntact() public {
-        walnut.hit();
-        walnut.shake(suint256(1));
         vm.expectRevert("SHELL_INTACT"); // Expect a revert when resetting an intact shell
         walnut.reset();
     }

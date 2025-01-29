@@ -53,26 +53,26 @@ async function main() {
 
   // Simulating multiplayer interactions
   console.log('=== Round 1 ===')
-  await app.shake('Alice', 8)
+  await app.shake('Alice', 2)
   await app.hit('Alice')
   await app.shake('Alice', 4)
   await app.hit('Alice')
-  await app.shake('Alice', 2)
+  await app.shake('Alice', 1)
   await app.hit('Alice')
+  // Alice looks at the number in round 1, should be 7
   await app.look('Alice')
 
   console.log('=== Round 2 ===')
-  await app.reset('Bob')
+  await app.reset('Bob') 
+  await app.hit('Bob') 
+  await app.shake('Bob', 1)
   await app.hit('Bob')
   await app.shake('Bob', 2)
   await app.hit('Bob')
-  await app.shake('Bob', 1)
-  await app.hit('Bob')
-
-  // Bob looks at the number in round 2
+  // Bob looks at the number in round 2, should be 3
   await app.look('Bob')
 
-  // Alice tries to look in round 2
+  // Alice tries to look in round 2, should fail by reverting
   try {
     await app.look('Alice')
   } catch (error) {
