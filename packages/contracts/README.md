@@ -10,7 +10,7 @@ $ sanvil
 $ cp .env.example .env
 ```
 
-3. Ensure contract tests are passing.
+3. Ensure contract tests are passing. From this directory, run
 ```bash
 $ sforge test
 ```
