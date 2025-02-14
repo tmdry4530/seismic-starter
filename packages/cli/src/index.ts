@@ -1,47 +1,84 @@
-import dotenv from "dotenv";
-dotenv.config();
+import dotenv from 'dotenv'
+import { join } from 'path'
+import {sanvil, seismicDevnet } from 'seismic-viem'
 
-import {
-    createShieldedWalletClient,
-    getShieldedContract,
-} from "seismic-viem";
-import { http } from "viem";
-import { anvil } from "viem/chains";
+import { CONTRACT_DIR, CONTRACT_NAME } from '../lib/constants'
+import { readContractABI, readContractAddress } from '../lib/utils'
+import { App } from './app'
 
-import { BROADCAST_FILE, ABI_FILE } from "../lib/constants";
-import { readContractAddress, readContractABI, sleep } from "../lib/utils";
+dotenv.config()
 
-async function main(): Promise<void> {
-    const walletClient = await createShieldedWalletClient({
-        chain: anvil,
-        transport: http(process.env.RPC_URL),
-        privateKey: process.env.ALICE_PRIVKEY as `0x${string}`,
-    });
-    const contract = getShieldedContract({
-        abi: readContractABI(ABI_FILE),
-        address: readContractAddress(BROADCAST_FILE),
-        client: walletClient,
-    });
+async function main() {
+  if (!process.env.CHAIN_ID || !process.env.RPC_URL) {
+    console.error('Please set your environment variables.')
+    process.exit(1)
+  }
 
-    await contract.write.reset();
-    await sleep(500);
+  const broadcastFile = join(
+    CONTRACT_DIR,
+    'broadcast',
+    `${CONTRACT_NAME}.s.sol`,
+    process.env.CHAIN_ID,
+    'run-latest.json'
+  )
+  const abiFile = join(
+    CONTRACT_DIR,
+    'out',
+    `${CONTRACT_NAME}.sol`,
+    `${CONTRACT_NAME}.json`
+  )
 
-    await contract.write.shake();
-    await sleep(500);
+  const chain =
+    process.env.CHAIN_ID === sanvil.id.toString() ? sanvil : seismicDevnet
 
-    await contract.write.hit();
-    await sleep(500);
+  const players = [
+    { name: 'Alice', privateKey: process.env.ALICE_PRIVKEY! },
+    { name: 'Bob', privateKey: process.env.BOB_PRIVKEY! },
+  ]
 
-    await contract.write.shake();
-    await sleep(500);
+  const app = new App({
+    players,
+    wallet: {
+      chain,
+      rpcUrl: process.env.RPC_URL!,
+    },
+    contract: {
+      abi: readContractABI(abiFile),
+      address: readContractAddress(broadcastFile),
+    },
+  })
 
-    await contract.write.shake();
-    await sleep(500);
+  await app.init()
 
-    await contract.write.hit();
-    await sleep(4000);
+  // Simulating multiplayer interactions
+  console.log('=== Round 1 ===')
+  await app.shake('Alice', 2)
+  await app.hit('Alice')
+  await app.shake('Alice', 4)
+  await app.hit('Alice')
+  await app.shake('Alice', 1)
+  await app.hit('Alice')
+  // Alice looks at the number in round 1, should be 7
+  await app.look('Alice')
 
-    console.log(">> RESULT: ", await contract.read.look());
+  console.log('=== Round 2 ===')
+  await app.reset('Bob')
+  await app.hit('Bob')
+  await app.shake('Bob', 1)
+  await app.hit('Bob')
+  await app.shake('Bob', 2)
+  await app.hit('Bob')
+  // Bob looks at the number in round 2, should be 3
+  await app.look('Bob')
+
+  // Alice tries to look in round 2, should fail by reverting
+  try {
+    await app.look('Alice')
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error'
+    console.error('Alice could not call look() in round 2:', errorMessage)
+  }
 }
 
-main();
+main()
