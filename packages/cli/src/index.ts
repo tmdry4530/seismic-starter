@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { join } from 'path'
-import {sanvil, seismicDevnet } from 'seismic-viem'
+import { sanvil, seismicDevnet } from 'seismic-viem'
 
 import { CONTRACT_DIR, CONTRACT_NAME } from '../lib/constants'
 import { readContractABI, readContractAddress } from '../lib/utils'
@@ -58,6 +58,7 @@ async function main() {
   await app.hit('Alice')
   await app.shake('Alice', 1)
   await app.hit('Alice')
+
   // Alice looks at the number in round 1, should be 7
   await app.look('Alice')
 
@@ -68,6 +69,7 @@ async function main() {
   await app.hit('Bob')
   await app.shake('Bob', 2)
   await app.hit('Bob')
+
   // Bob looks at the number in round 2, should be 3
   await app.look('Bob')
 
