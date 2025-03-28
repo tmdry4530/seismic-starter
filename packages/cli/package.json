@@ -1,17 +1,20 @@
 {
-  "name": "walnut-cli",
-  "license": "MIT License",
+  "name": "escrow-cli",
+  "version": "0.1.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun run src/index.ts"
+    "dev": "bun src/escrow/EscrowClient.ts"
   },
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "seismic-viem": "1.0.12",
-    "viem": "^2.22.3"
+    "dotenv": "^16.4.1",
+    "seismic-viem": "^0.0.0-main-20240103233217-ffa0b9a",
+    "uuid": "^9.0.1",
+    "viem": "^1.19.11"
   },
   "devDependencies": {
-    "@types/node": "^22.7.6",
-    "typescript": "^5.6.3"
+    "@types/node": "^20.10.5",
+    "@types/uuid": "^9.0.7",
+    "typescript": "^5.3.3"
   }
 }
